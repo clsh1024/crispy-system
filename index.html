@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瑞思测试--开心请答题</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary-color: #4361ee;
+            --primary-light: #e2e8ff;
+            --primary-dark: #3a56d4;
+            --secondary-color: #ff9e00;
+            --text-color: #333333;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --success: #4caf50;
+            --error: #f44336;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        body {
+            font-family: 'Nunito', Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            min-height: 700px;
+            width: 90%;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 36px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+        
+        .question-container {
+            margin: 30px 0;
+            padding: 25px;
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--primary-color);
+        }
+        
+        .question {
+            font-size: 38px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.4;
+            color: var(--primary-color);
+            flex-wrap: wrap;
+        }
+        
+        #progress {
+            margin-bottom: 25px !important;
+        }
+        
+        .progress-container {
+            background-color: var(--white);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        
+        .progress-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .round-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(67, 97, 238, 0.3);
+        }
+        
+        .progress-text {
+            color: #666;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e8e8e8;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 85%;
+            margin: 0 auto;
+        }
+        
+        .option {
+            padding: 22px;
+            border: 2px solid #e8e8e8;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 600;
+            width: 100%;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+            margin-bottom: 5px;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--white);
+        }
+        
+        .option:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.08);
+        }
+        
+        .option.selected {
+            background-color: var(--primary-light);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+        
+        .button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.4);
+        }
+        
+        .button:disabled {
+            background-color: #d9d9d9;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        
+        .tool-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .tool-button {
+            padding: 10px 16px;
+            background-color: var(--white);
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .tool-button svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .tool-button:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+        
+        .result {
+            margin-top: 40px;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            display: none;
+            box-shadow: var(--box-shadow);
+            background-color: var(--white);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result.success {
+            background-color: #f0fff4;
+            border-left: 5px solid var(--success);
+        }
+        
+        .result.error {
+            background-color: #fff5f5;
+            border-left: 5px solid var(--error);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>瑞思测试--开心请答题</h1>
+        <div class="question-container">
+            <div id="progress"></div>
+            <div class="question">
+                <span id="question-text"></span>
+                <div id="translation-text" style="display: none; margin-top: 10px; padding: 10px; background-color: #f5f5f5; border-radius: 8px; font-size: 18px; color: #666;"></div>
+                <div class="tool-buttons">
+                    <button class="tool-button" onclick="speak()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                        朗读
+                    </button>
+                    <button class="tool-button" onclick="translate()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"></path><path d="M4 14l6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="M22 22l-5-10-5 10"></path><path d="M14 18h6"></path></svg>
+                        翻译
+                    </button>
+                </div>
+            </div>
+            <div class="options" id="options"></div>
+        </div>
+        <div style="text-align: center;"><!-- 添加一个居中的容器 -->
+            <button class="button" id="next-button" onclick="nextQuestion()" disabled>下一题</button>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let currentRound = 1;
+        let score = 0;
+        let selectedAnswers = new Set(); // 创建一个空集合来跟踪已回答的题目
+        let wrongQuestions = [];
+        
+        // 添加调试信息
+        console.log('初始化变量，selectedAnswers大小:', selectedAnswers.size);
+
+        // 创建一个包含50道题目的数组
+        function loadQuestions() {
+            // 先定义题目数组
+            const originalQuestions = [
+                // 字母发音相关
+                {
+                    text: "What sound does the letter D make?",
+                    options: ["/d/", "/t/", "/b/", "/p/"],
+                    correct: 0,
+                    type: "letter_sound"
+                },
+                {
+                    text: "Which letter does dolphin begin with?",
+                    options: ["D", "B", "P", "T"],
+                    correct: 0,
+                    type: "letter_recognition"
+                },
+                {
+                    text: "What sound does dolphin begin with?",
+                    options: ["/d/", "/t/", "/b/", "/p/"],
+                    correct: 0,
+                    type: "word_sound"
+                },
+                {
+                    text: "What sound does the letter B make?",
+                    options: ["/b/", "/p/", "/d/", "/t/"],
+                    correct: 0,
+                    type: "letter_sound"
+                },
+                {
+                    text: "Which letter does bear begin with?",
+                    options: ["B", "P", "D", "T"],
+                    correct: 0,
+                    type: "letter_recognition"
+                },
+                {
+                    text: "What sound does bear begin with?",
+                    options: ["/b/", "/p/", "/d/", "/t/"],
+                    correct: 1,
+                    type: "word_sound"
+                },
+                {
+                    text: "What sound does the letter P make?",
+                    options: ["/p/", "/b/", "/t/", "/d/"],
+                    correct: 0,
+                    type: "letter_sound"
+                },
+                {
+                    text: "Which letter does pig begin with?",
+                    options: ["P", "B", "T", "D"],
+                    correct: 0,
+                    type: "letter_recognition"
+                },
+                {
+                    text: "What sound does pig begin with?",
+                    options: ["/p/", "/b/", "/t/", "/d/"],
+                    correct: 0,
+                    type: "word_sound"
+                },
+                {
+                    text: "What sound does the letter T make?",
+                    options: ["/t/", "/d/", "/p/", "/b/"],
+                    correct: 0,
+                    type: "letter_sound"
+                },
+                // 词族与押韵词
+                {
+                    text: "What sound does 'hit' make?",
+                    options: ["/it/", "/at/", "/et/", "/ut/"],
+                    correct: 0,
+                    type: "word_family"
+                },
+                {
+                    text: "Which words rhyme with 'bad'?",
+                    options: ["dad, sad", "big, pig", "hit, fit", "can, pan"],
+                    correct: 0,
+                    type: "rhyming_words"
+                },
+                {
+                    text: "What sound does 'cat' make?",
+                    options: ["/at/", "/it/", "/et/", "/ut/"],
+                    correct: 0,
+                    type: "word_family"
+                },
+                {
+                    text: "Which words rhyme with 'cat'?",
+                    options: ["hat, rat", "hit, fit", "hen, pen", "cup, pup"],
+                    correct: 0,
+                    type: "rhyming_words"
+                },
+                {
+                    text: "What sound does 'pen' make?",
+                    options: ["/en/", "/an/", "/in/", "/on/"],
+                    correct: 0,
+                    type: "word_family"
+                },
+                {
+                    text: "Which words rhyme with 'pen'?",
+                    options: ["hen, ten", "pin, tin", "pan, man", "pot, hot"],
+                    correct: 0,
+                    type: "rhyming_words"
+                },
+                {
+                    text: "What sound does 'big' make?",
+                    options: ["/ig/", "/ag/", "/eg/", "/og/"],
+                    correct: 0,
+                    type: "word_family"
+                },
+                {
+                    text: "Which words rhyme with 'big'?",
+                    options: ["pig, dig", "bag, tag", "leg, peg", "dog, log"],
+                    correct: 0,
+                    type: "rhyming_words"
+                },
+                {
+                    text: "What sound does 'cup' make?",
+                    options: ["/up/", "/ap/", "/ip/", "/op/"],
+                    correct: 0,
+                    type: "word_family"
+                },
+                {
+                    text: "Which words rhyme with 'cup'?",
+                    options: ["pup, up", "cap, tap", "hip, tip", "hop, top"],
+                    correct: 0,
+                    type: "rhyming_words"
+                },
+                // 阅读与图文对应
+                {
+                    text: "Who lives in the hut?",
+                    options: ["A fox", "A cat", "An ox", "A bug"],
+                    correct: 0,
+                    type: "reading_comprehension"
+                },
+                {
+                    text: "Where does the cat sit?",
+                    options: ["On the mat", "In the box", "Under the bed", "By the tree"],
+                    correct: 0,
+                    type: "reading_comprehension"
+                },
+                {
+                    text: "What does the dog have?",
+                    options: ["A bone", "A ball", "A toy", "A stick"],
+                    correct: 0,
+                    type: "reading_comprehension"
+                },
+                {
+                    text: "Where is the fish?",
+                    options: ["In the pond", "In the sea", "In the tank", "In the river"],
+                    correct: 2,
+                    type: "reading_comprehension"
+                },
+                {
+                    text: "What is the boy doing?",
+                    options: ["Reading a book", "Playing a game", "Eating food", "Running fast"],
+                    correct: 1,
+                    type: "reading_comprehension"
+                },
+                // 动物与属性分类
+                {
+                    text: "Which animals live in water?",
+                    options: ["Frog, beaver", "Cat, fox", "Bug, rat", "Hog, ox"],
+                    correct: 0,
+                    type: "animal_habitat"
+                },
+                {
+                    text: "What color is the frog?",
+                    options: ["Green", "Brown", "Pink", "Yellow"],
+                    correct: 0,
+                    type: "animal_color"
+                },
+                {
+                    text: "Which animals can fly?",
+                    options: ["Bird, bee", "Cat, dog", "Fish, frog", "Pig, cow"],
+                    correct: 0,
+                    type: "animal_habitat"
+                },
+                {
+                    text: "What color is the bird?",
+                    options: ["Blue", "Green", "Red", "Yellow"],
+                    correct: 2,
+                    type: "animal_color"
+                },
+                {
+                    text: "Which animals live on a farm?",
+                    options: ["Cow, pig", "Lion, tiger", "Shark, whale", "Snake, lizard"],
+                    correct: 0,
+                    type: "animal_habitat"
+                },
+                {
+                    text: "What color is the cow?",
+                    options: ["Black and white", "Brown", "Gray", "Yellow"],
+                    correct: 0,
+                    type: "animal_color"
+                },
+                {
+                    text: "Which animals live in the jungle?",
+                    options: ["Monkey, tiger", "Sheep, horse", "Duck, chicken", "Rabbit, hamster"],
+                    correct: 0,
+                    type: "animal_habitat"
+                },
+                {
+                    text: "What color is the tiger?",
+                    options: ["Orange with black stripes", "Yellow", "Brown", "White"],
+                    correct: 0,
+                    type: "animal_color"
+                },
+                // 食物分类
+                {
+                    text: "Which foods are fruits?",
+                    options: ["Apple, banana", "Carrot, potato", "Bread, cake", "Chicken, beef"],
+                    correct: 0,
+                    type: "food_category"
+                },
+                {
+                    text: "Which foods are vegetables?",
+                    options: ["Carrot, broccoli", "Apple, orange", "Cake, cookie", "Fish, chicken"],
+                    correct: 0,
+                    type: "food_category"
+                },
+                {
+                    text: "Which foods are sweet?",
+                    options: ["Candy, cake", "Bread, rice", "Carrot, potato", "Fish, meat"],
+                    correct: 0,
+                    type: "food_taste"
+                },
+                {
+                    text: "Which foods are healthy?",
+                    options: ["Fruits, vegetables", "Candy, chocolate", "Chips, soda", "Ice cream, cake"],
+                    correct: 0,
+                    type: "food_health"
+                },
+                // 颜色与形状
+                {
+                    text: "What color is the sky?",
+                    options: ["Blue", "Green", "Red", "Yellow"],
+                    correct: 0,
+                    type: "color_recognition"
+                },
+                {
+                    text: "What color is grass?",
+                    options: ["Green", "Blue", "Red", "Yellow"],
+                    correct: 0,
+                    type: "color_recognition"
+                },
+                {
+                    text: "What shape is a ball?",
+                    options: ["Circle", "Square", "Triangle", "Rectangle"],
+                    correct: 0,
+                    type: "shape_recognition"
+                },
+                {
+                    text: "What shape is a box?",
+                    options: ["Square", "Circle", "Triangle", "Oval"],
+                    correct: 0,
+                    type: "shape_recognition"
+                },
+                // 数字与计数
+                {
+                    text: "How many fingers do you have on one hand?",
+                    options: ["Five", "Four", "Six", "Ten"],
+                    correct: 0,
+                    type: "counting"
+                },
+                {
+                    text: "What comes after number 5?",
+                    options: ["6", "4", "7", "8"],
+                    correct: 0,
+                    type: "number_sequence"
+                },
+                {
+                    text: "How many days are in a week?",
+                    options: ["Seven", "Five", "Six", "Eight"],
+                    correct: 0,
+                    type: "counting"
+                },
+                {
+                    text: "What is 2 + 2?",
+                    options: ["4", "3", "5", "6"],
+                    correct: 0,
+                    type: "math"
+                },
+                {
+                    text: "What is 5 - 2?",
+                    options: ["3", "2", "4", "7"],
+                    correct: 0,
+                    type: "math"
+                },
+                // 季节与天气
+                {
+                    text: "Which season is hot?",
+                    options: ["Summer", "Winter", "Fall", "Spring"],
+                    correct: 0,
+                    type: "season"
+                },
+                {
+                    text: "Which season is cold?",
+                    options: ["Winter", "Summer", "Spring", "Fall"],
+                    correct: 0,
+                    type: "season"
+                },
+                {
+                    text: "What do you wear when it rains?",
+                    options: ["Raincoat", "T-shirt", "Shorts", "Sandals"],
+                    correct: 0,
+                    type: "weather_clothing"
+                },
+                {
+                    text: "What do you wear when it's hot?",
+                    options: ["T-shirt", "Coat", "Scarf", "Gloves"],
+                    correct: 0,
+                    type: "weather_clothing"
+                },
+                // 职业认知
+                {
+                    text: "Who teaches in a school?",
+                    options: ["Teacher", "Doctor", "Firefighter", "Police officer"],
+                    correct: 0,
+                    type: "occupation"
+                },
+                {
+                    text: "Who helps sick people?",
+                    options: ["Doctor", "Teacher", "Farmer", "Driver"],
+                    correct: 0,
+                    type: "occupation"
+                },
+                {
+                    text: "Who puts out fires?",
+                    options: ["Firefighter", "Police officer", "Teacher", "Doctor"],
+                    correct: 0,
+                    type: "occupation"
+                },
+                {
+                    text: "Who keeps people safe?",
+                    options: ["Police officer", "Chef", "Artist", "Musician"],
+                    correct: 0,
+                    type: "occupation"
+                },
+                // 交通工具
+                {
+                    text: "What flies in the sky?",
+                    options: ["Airplane", "Car", "Boat", "Train"],
+                    correct: 0,
+                    type: "transportation"
+                },
+                {
+                    text: "What moves on water?",
+                    options: ["Boat", "Car", "Bicycle", "Bus"],
+                    correct: 0,
+                    type: "transportation"
+                },
+                {
+                    text: "What has two wheels?",
+                    options: ["Bicycle", "Car", "Bus", "Train"],
+                    correct: 0,
+                    type: "transportation"
+                },
+                {
+                    text: "What runs on tracks?",
+                    options: ["Train", "Car", "Bicycle", "Airplane"],
+                    correct: 0,
+                    type: "transportation"
+                },
+                // 家庭成员
+                {
+                    text: "Who is your father's father?",
+                    options: ["Grandfather", "Uncle", "Brother", "Cousin"],
+                    correct: 0,
+                    type: "family"
+                },
+                {
+                    text: "Who is your mother's sister?",
+                    options: ["Aunt", "Grandmother", "Cousin", "Sister"],
+                    correct: 0,
+                    type: "family"
+                },
+                {
+                    text: "Who is your father's brother?",
+                    options: ["Uncle", "Grandfather", "Cousin", "Brother"],
+                    correct: 0,
+                    type: "family"
+                },
+                {
+                    text: "Who is your mother's mother?",
+                    options: ["Grandmother", "Aunt", "Sister", "Cousin"],
+                    correct: 0,
+                    type: "family"
+                },
+                // 身体部位
+                {
+                    text: "What do you use to see?",
+                    options: ["Eyes", "Ears", "Nose", "Mouth"],
+                    correct: 0,
+                    type: "body_parts"
+                },
+                {
+                    text: "What do you use to hear?",
+                    options: ["Ears", "Eyes", "Nose", "Mouth"],
+                    correct: 0,
+                    type: "body_parts"
+                },
+                {
+                    text: "What do you use to smell?",
+                    options: ["Nose", "Eyes", "Ears", "Mouth"],
+                    correct: 0,
+                    type: "body_parts"
+                },
+                {
+                    text: "What do you use to taste?",
+                    options: ["Mouth", "Eyes", "Ears", "Nose"],
+                    correct: 0,
+                    type: "body_parts"
+                },
+                // 情感表达
+                {
+                    text: "How do you feel when you get a present?",
+                    options: ["Happy", "Sad", "Angry", "Scared"],
+                    correct: 0,
+                    type: "emotions"
+                },
+                {
+                    text: "How do you feel when you lose your toy?",
+                    options: ["Sad", "Happy", "Excited", "Surprised"],
+                    correct: 0,
+                    type: "emotions"
+                },
+                {
+                    text: "How do you feel when someone scares you?",
+                    options: ["Scared", "Happy", "Sad", "Angry"],
+                    correct: 0,
+                    type: "emotions"
+                },
+                {
+                    text: "How do you feel when someone takes your toy?",
+                    options: ["Angry", "Happy", "Scared", "Surprised"],
+                    correct: 0,
+                    type: "emotions"
+                },
+                // 日常活动
+                {
+                    text: "What do you do before going to bed?",
+                    options: ["Brush teeth", "Play games", "Run outside", "Eat lunch"],
+                    correct: 0,
+                    type: "daily_routine"
+                },
+                {
+                    text: "What do you do in the morning?",
+                    options: ["Eat breakfast", "Go to bed", "Watch stars", "Play in snow"],
+                    correct: 0,
+                    type: "daily_routine"
+                },
+                {
+                    text: "What do you do at school?",
+                    options: ["Learn", "Sleep", "Cook", "Drive"],
+                    correct: 0,
+                    type: "daily_routine"
+                },
+                {
+                    text: "What do you do when you're hungry?",
+                    options: ["Eat food", "Go to sleep", "Take a bath", "Read a book"],
+                    correct: 0,
+                    type: "daily_routine"
+                },
+                // 位置与方向
+                {
+                    text: "Where is the bird?",
+                    options: ["Above the tree", "Under the tree", "Inside the tree", "Behind the tree"],
+                    correct: 0,
+                    type: "position"
+                },
+                {
+                    text: "Where is the cat?",
+                    options: ["Under the table", "On the table", "Above the table", "Inside the table"],
+                    correct: 0,
+                    type: "position"
+                }
+            ];
+            
+            // 随机化正确答案
+            questions = originalQuestions.map(question => {
+                // 获取正确答案的选项内容
+                const correctOption = question.options[question.correct];
+                // 随机生成新的正确答案索引 (0-3)
+                const newCorrectIndex = Math.floor(Math.random() * 4);
+                // 如果新索引与原索引不同，需要调整选项顺序
+                if (newCorrectIndex !== question.correct) {
+                    // 保存原来正确答案的选项内容
+                    const options = [...question.options];
+                    // 将原来正确答案的选项内容放到新的正确答案位置
+                    options[newCorrectIndex] = correctOption;
+                    // 将新位置原来的选项内容放到原来正确答案的位置
+                    options[question.correct] = question.options[newCorrectIndex];
+                    // 更新问题对象
+                    return {
+                        ...question,
+                        options: options,
+                        correct: newCorrectIndex
+                    };
+                }
+                // 如果新索引与原索引相同，则不需要调整
+                return question;
+            });
+            
+            // 打印一些随机化后的题目，用于调试
+            console.log('随机化后的前5个题目正确答案索引:', 
+                questions.slice(0, 5).map(q => q.correct));
+                
+            // 统计各个选项作为正确答案的数量，用于验证随机性
+            const correctCounts = [0, 0, 0, 0];
+            questions.forEach(q => correctCounts[q.correct]++);
+            console.log('各选项作为正确答案的数量统计:', correctCounts);
+        }
+
+        function displayQuestion() {
+            // 确保questions数组已加载且不为空
+            if (!questions || questions.length === 0) {
+                console.error('题目数组为空或未正确加载');
+                return;
+            }
+            
+            // 确保currentQuestionIndex有效
+            if (currentQuestionIndex < 0 || currentQuestionIndex >= questions.length) {
+                console.error('当前题目索引无效:', currentQuestionIndex);
+                currentQuestionIndex = 0; // 重置为第一题
+            }
+            
+            const question = questions[currentQuestionIndex];
+            
+            // 确保question对象存在且包含必要属性
+            if (!question || !question.text || !question.options) {
+                console.error('当前题目对象无效:', question);
+                return;
+            }
+            
+            // 设置题目文本
+            const questionTextElement = document.getElementById('question-text');
+            if (questionTextElement) {
+                questionTextElement.textContent = question.text;
+            } else {
+                console.error('未找到question-text元素');
+            }
+            
+            // 隐藏翻译文本，但不清空内容
+            document.getElementById('translation-text').style.display = 'none';
+            
+            // 检查selectedAnswers的状态
+            console.log('显示题目时的selectedAnswers大小:', selectedAnswers.size);
+            console.log('当前题目索引:', currentQuestionIndex);
+            
+            // 修正进度显示，确保正确显示当前轮次和已答题数量
+            const progressElement = document.getElementById('progress');
+            if (progressElement) {
+                progressElement.innerHTML = `
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span class="round-badge">第 ${currentRound} 轮</span>
+                            <span class="progress-text">您已答题 ${selectedAnswers.size}/10 (当前为第 ${selectedAnswers.size + 1} 题)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${(selectedAnswers.size/10)*100}%"></div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                console.error('未找到progress元素');
+            }
+            
+            // 渲染选项
+            const optionsContainer = document.getElementById('options');
+            if (!optionsContainer) {
+                console.error('未找到options容器元素');
+                return;
+            }
+            optionsContainer.innerHTML = '';
+            
+            // 确保选项数组存在且不为空
+            if (!question.options || !Array.isArray(question.options) || question.options.length === 0) {
+                console.error('选项数组为空或无效');
+                return;
+            }
+            
+            // 渲染每个选项
+            question.options.forEach((option, index) => {
+                if (option === undefined || option === null) {
+                    console.error(`选项 ${index} 无效:`, option);
+                    return; // 跳过无效选项
+                }
+                
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                
+                // 创建选项文本容器
+                const optionTextElement = document.createElement('span');
+                optionTextElement.textContent = option;
+                optionElement.appendChild(optionTextElement);
+                
+                // 创建朗读按钮
+                const speakButton = document.createElement('button');
+                speakButton.className = 'tool-button';
+                speakButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                    朗读
+                `;
+                speakButton.style.marginLeft = '10px';
+                speakButton.onclick = (e) => {
+                    e.stopPropagation(); // 阻止事件冒泡，避免触发选项选择
+                    speakOption(option);
+                };
+                optionElement.appendChild(speakButton);
+                
+                // 设置选项点击事件
+                optionElement.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionElement);
+            });
+
+            // 禁用下一题按钮，直到用户选择了一个选项
+            const nextButton = document.getElementById('next-button');
+            if (nextButton) {
+                nextButton.disabled = true;
+            } else {
+                console.error('未找到next-button元素');
+            }
+        }
+
+        function selectOption(index) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected'));
+            options[index].classList.add('selected');
+            document.getElementById('next-button').disabled = false;
+        }
+
+        function nextQuestion() {
+            const selectedOption = document.querySelector('.option.selected');
+            const selectedIndex = Array.from(document.querySelectorAll('.option')).indexOf(selectedOption);
+            
+            // 记录答题情况
+            if (questions[currentQuestionIndex].correct === selectedIndex) {
+                score++;
+                console.log('回答正确! 当前分数:', score);
+            } else {
+                wrongQuestions.push({
+                    ...questions[currentQuestionIndex],
+                    selectedAnswer: selectedIndex
+                });
+                console.log('回答错误! 错题数:', wrongQuestions.length);
+            }
+
+            // 记录当前题目已回答
+            selectedAnswers.add(currentQuestionIndex);
+            
+            // 详细记录当前状态
+            const answeredCount = selectedAnswers.size;
+            console.log('已回答题目数量:', answeredCount, '当前轮次:', currentRound);
+            console.log('selectedAnswers内容:', Array.from(selectedAnswers));
+            
+            // 检查是否完成了当前轮次的题目
+            // 每轮固定回答10题
+            if (answeredCount >= 10) {
+                console.log(`已完成${answeredCount}题，准备结束当前轮次`);
+                if (currentRound === 5) {
+                    showFinalResult();
+                } else {
+                    showRoundResult();
+                }
+                return;
+            }
+            
+            // 获取下一个未回答的题目
+            let availableQuestions = [];
+            for (let i = 0; i < questions.length; i++) {
+                if (!selectedAnswers.has(i)) {
+                    availableQuestions.push(i);
+                }
+            }
+            
+            console.log('可用题目数量:', availableQuestions.length);
+            console.log('可用题目索引:', availableQuestions);
+            
+            if (availableQuestions.length > 0) {
+                // 随机选择一个未回答的题目
+                const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+                currentQuestionIndex = availableQuestions[randomIndex];
+                console.log('选择新题目索引:', currentQuestionIndex);
+                // 确保每次显示新题目时按钮都居中显示
+                document.getElementById('next-button').parentElement.style.textAlign = 'center';
+                displayQuestion();
+            } else {
+                // 这种情况不应该发生，因为我们有50道题，每轮只答10题
+                console.log('错误: 没有可用题目，但未达到10题，强制结束当前轮次');
+                console.log('错误分析: selectedAnswers可能未正确重置或题库数量不足');
+                if (currentRound === 5) {
+                    showFinalResult();
+                } else {
+                    showRoundResult();
+                }
+            }
+        }
+
+        function getNextUnansweredQuestion() {
+            for (let i = 0; i < questions.length; i++) {
+                if (!selectedAnswers.has(i)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        function showRoundResult() {
+            const resultDiv = document.getElementById('result');
+            
+            // 添加调试信息
+            console.log('显示轮次结果，当前轮次:', currentRound);
+            console.log('当前得分:', score);
+            console.log('错题数量:', wrongQuestions.length);
+            console.log('已答题数量:', selectedAnswers.size);
+            
+            // 添加错误分析
+            let errorAnalysis = '';
+            if (selectedAnswers.size < 10) {
+                errorAnalysis = `
+                <div style="margin-top: 15px; padding: 10px; background-color: #fff2f0; border: 1px solid #ffccc7; border-radius: 4px;">
+                    <h4 style="color: #ff4d4f;">错误分析</h4>
+                    <p>本轮只完成了 ${selectedAnswers.size}/10 题，可能原因：</p>
+                    <ul>
+                        <li>题库数量不足（当前题库只有${questions.length}题）</li>
+                        <li>selectedAnswers集合未正确重置</li>
+                        <li>题目选择逻辑存在问题</li>
+                    </ul>
+                    <p>请查看控制台日志获取更多信息</p>
+                </div>
+                `;
+            }
+            
+            resultDiv.innerHTML = `
+                <h3 style="color: var(--primary-color); font-size: 28px; margin-bottom: 20px; text-align: center;">第${currentRound}轮答题完成</h3>
+                <div style="background-color: var(--primary-light); padding: 15px; border-radius: var(--border-radius); margin-bottom: 25px; text-align: center;">
+                    <p style="font-size: 20px; font-weight: 600; margin: 0;">
+                        <span style="color: var(--primary-color); font-size: 32px;">${score}</span>
+                        <span style="color: #666;">/${selectedAnswers.size}</span>
+                    </p>
+                    <p style="margin: 5px 0 0; color: #666;">本轮得分</p>
+                </div>
+                ${errorAnalysis}
+                ${wrongQuestions.length > 0 ? `
+                    <h4 style="color: var(--primary-color); margin: 30px 0 15px; font-size: 22px; position: relative; padding-left: 15px;">
+                        <span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 5px; height: 20px; background: var(--secondary-color); border-radius: 3px;"></span>
+                        错题详解
+                    </h4>
+                    <div style="margin-top: 20px;">
+                        ${wrongQuestions.map(q => `
+                            <div style="border: 1px solid #e8e8e8; padding: 20px; margin-bottom: 20px; border-radius: var(--border-radius); box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: var(--error);"></div>
+                                <p style="font-weight: 700; font-size: 18px; margin-bottom: 15px; color: var(--text-color);">${q.text}</p>
+                                <p style="color: var(--error); margin-bottom: 10px; font-weight: 600;">
+                                    <span style="display: inline-block; width: 20px; height: 20px; background: var(--error); color: white; border-radius: 50%; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px;">✕</span>
+                                    你的答案：${q.options[q.selectedAnswer]}
+                                </p>
+                                <p style="color: var(--success); font-weight: 600;">
+                                    <span style="display: inline-block; width: 20px; height: 20px; background: var(--success); color: white; border-radius: 50%; text-align: center; line-height: 20px; margin-right: 8px; font-size: 12px;">✓</span>
+                                    正确答案：${q.options[q.correct]}
+                                </p>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '<div style="text-align: center; padding: 30px 0;"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f389.svg" width="60" height="60"><p style="font-size: 20px; font-weight: 600; color: var(--success); margin-top: 15px;">恭喜您全部答对！</p></div>'}
+                ${currentRound < 5 ? '<div style="text-align: center; margin-top: 30px;"><button class="button" onclick="startNextRound()">继续答题</button></div>' : ''}
+            `;
+            resultDiv.style.display = 'block';
+            document.getElementById('next-button').style.display = 'none';
+        }
+
+        function showFinalResult() {
+            const resultDiv = document.getElementById('result');
+            
+            // 添加调试信息
+            console.log('显示最终结果，当前轮次:', currentRound);
+            console.log('当前得分:', score);
+            console.log('错题数量:', wrongQuestions.length);
+            console.log('已答题数量:', selectedAnswers.size);
+            
+            resultDiv.innerHTML = `
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f3c6.svg" width="80" height="80">
+                    <h3 style="color: var(--primary-color); font-size: 32px; margin: 20px 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">恭喜您，全部答题完毕！</h3>
+                </div>
+                <div style="background: linear-gradient(135deg, var(--primary-light), #f0f7ff); padding: 25px; border-radius: var(--border-radius); margin-bottom: 30px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                    <p style="font-size: 22px; font-weight: 600; margin: 0;">
+                        最后一轮得分：
+                        <span style="color: var(--primary-color); font-size: 36px;">${score}</span>
+                        <span style="color: #666;">/${selectedAnswers.size}</span>
+                    </p>
+                </div>
+                ${wrongQuestions.length > 0 ? `
+                    <h4 style="color: var(--primary-color); margin: 30px 0 20px; font-size: 24px; position: relative; padding-left: 18px;">
+                        <span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 6px; height: 24px; background: var(--secondary-color); border-radius: 3px;"></span>
+                        错题详解
+                    </h4>
+                    <div style="margin-top: 25px;">
+                        ${wrongQuestions.map(q => `
+                            <div style="border: 1px solid #e8e8e8; padding: 25px; margin-bottom: 25px; border-radius: var(--border-radius); box-shadow: 0 3px 10px rgba(0,0,0,0.05); position: relative; overflow: hidden; background-color: var(--white);">
+                                <div style="position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--error);"></div>
+                                <p style="font-weight: 700; font-size: 20px; margin-bottom: 18px; color: var(--text-color);">${q.text}</p>
+                                <p style="color: var(--error); margin-bottom: 12px; font-weight: 600; display: flex; align-items: center;">
+                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--error); color: white; border-radius: 50%; margin-right: 10px; font-size: 14px;">✕</span>
+                                    你的答案：${q.options[q.selectedAnswer]}
+                                </p>
+                                <p style="color: var(--success); font-weight: 600; display: flex; align-items: center;">
+                                    <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--success); color: white; border-radius: 50%; margin-right: 10px; font-size: 14px;">✓</span>
+                                    正确答案：${q.options[q.correct]}
+                                </p>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div style="text-align: center; padding: 40px 0; background-color: #f0fff4; border-radius: var(--border-radius); margin-top: 20px;">
+                        <img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f44f.svg" width="70" height="70">
+                        <p style="font-size: 24px; font-weight: 700; color: var(--success); margin: 20px 0 10px;">太棒了！</p>
+                        <p style="font-size: 18px; color: #666;">恭喜您全部答对！</p>
+                    </div>
+                `}
+                <div style="text-align: center; margin-top: 40px;">
+                    <button class="button" onclick="location.reload()" style="background-color: var(--secondary-color); box-shadow: 0 4px 8px rgba(255, 158, 0, 0.3);">
+                        重新开始
+                    </button>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+            document.getElementById('next-button').style.display = 'none';
+        }
+
+        function startNextRound() {
+            currentRound++;
+            wrongQuestions = [];
+            score = 0;
+            
+            // 完全重置selectedAnswers，开始新一轮答题
+            // 直接创建一个新的Set对象，而不是使用clear方法
+            selectedAnswers = new Set();
+            
+            // 验证selectedAnswers是否真的被清空
+            console.log('开始新一轮答题，当前轮次：', currentRound);
+            console.log('已重置selectedAnswers，当前大小：', selectedAnswers.size);
+            console.log('selectedAnswers内容：', Array.from(selectedAnswers));
+            
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('next-button').style.display = 'block';
+            // 确保按钮在每轮答题中都能正确居中显示
+            document.getElementById('next-button').parentElement.style.textAlign = 'center';
+            // 强制重新应用居中样式，确保在所有浏览器和情况下都能生效
+            setTimeout(() => {
+                document.getElementById('next-button').parentElement.style.textAlign = 'center';
+            }, 0);
+            
+            // 在新一轮开始时，随机选择一个题目索引
+            // 从50道题目中随机选择一个作为起始题目
+            currentQuestionIndex = Math.floor(Math.random() * questions.length);
+            console.log('随机选择的题目索引：', currentQuestionIndex);
+            displayQuestion();
+        }
+
+        function speak() {
+            const text = questions[currentQuestionIndex].text;
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.5; // 降低语速，适合儿童听清
+            utterance.volume = 1.3; // 确保音量足够
+            utterance.pitch = 1.3; // 稍微提高音调，使声音更清晰
+            speechSynthesis.speak(utterance);
+        }
+        
+        function speakOption(optionText) {
+            const utterance = new SpeechSynthesisUtterance(optionText);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.5; // 更慢的语速，比题目朗读更慢
+            utterance.volume = 1.3; // 确保音量足够
+            utterance.pitch = 1.0; // 正常音调
+            speechSynthesis.speak(utterance);
+        }
+
+        async function translate() {
+            // 确保questions数组和currentQuestionIndex有效
+            if (!questions || questions.length === 0 || currentQuestionIndex < 0 || currentQuestionIndex >= questions.length) {
+                console.error('无法翻译：题目数据无效');
+                document.getElementById('translation-text').innerHTML = '<span style="color: #f44336;">翻译失败：题目数据无效</span>';
+                document.getElementById('translation-text').style.display = 'block';
+                return;
+            }
+            
+            const text = questions[currentQuestionIndex].text;
+            
+            // 简单的英文到中文翻译映射
+            const translations = {
+                // 字母发音相关
+                "What sound does the letter D make?": "字母D发什么音？",
+                "Which letter does dolphin begin with?": "海豚（dolphin）以哪个字母开头？",
+                "What sound does dolphin begin with?": "海豚（dolphin）以什么音开头？",
+                "What sound does the letter B make?": "字母B发什么音？",
+                "Which letter does bear begin with?": "熊（bear）以哪个字母开头？",
+                "What sound does bear begin with?": "熊（bear）以什么音开头？",
+                "What sound does the letter P make?": "字母P发什么音？",
+                "Which letter does pig begin with?": "猪（pig）以哪个字母开头？",
+                "What sound does pig begin with?": "猪（pig）以什么音开头？",
+                "What sound does the letter T make?": "字母T发什么音？",
+                
+                // 词族与押韵词
+                "What sound does 'hit' make?": "'hit'发什么音？",
+                "Which words rhyme with 'bad'?": "哪些词与'bad'押韵？",
+                "What sound does 'cat' make?": "'cat'发什么音？",
+                "Which words rhyme with 'cat'?": "哪些词与'cat'押韵？",
+                "What sound does 'pen' make?": "'pen'发什么音？",
+                "Which words rhyme with 'pen'?": "哪些词与'pen'押韵？",
+                "What sound does 'big' make?": "'big'发什么音？",
+                "Which words rhyme with 'big'?": "哪些词与'big'押韵？",
+                "What sound does 'cup' make?": "'cup'发什么音？",
+                "Which words rhyme with 'cup'?": "哪些词与'cup'押韵？",
+                
+                // 阅读与图文对应
+                "Who lives in the hut?": "谁住在小屋里？",
+                "Where does the cat sit?": "猫坐在哪里？",
+                "What does the dog have?": "狗有什么？",
+                "Where is the fish?": "鱼在哪里？",
+                "What is the boy doing?": "男孩在做什么？",
+                
+                // 动物与属性分类
+                "Which animals live in water?": "哪些动物生活在水中？",
+                "What color is the frog?": "青蛙是什么颜色的？",
+                "Which animals can fly?": "哪些动物会飞？",
+                "What color is the bird?": "鸟是什么颜色的？",
+                "Which animals live on a farm?": "哪些动物生活在农场？",
+                "What color is the cow?": "奶牛是什么颜色的？",
+                "Which animals live in the jungle?": "哪些动物生活在丛林中？",
+                "What color is the tiger?": "老虎是什么颜色的？",
+                
+                // 食物分类
+                "Which foods are fruits?": "哪些食物是水果？",
+                "Which foods are vegetables?": "哪些食物是蔬菜？",
+                "Which foods are sweet?": "哪些食物是甜的？",
+                "Which foods are healthy?": "哪些食物是健康的？",
+                
+                // 颜色与形状
+                "What color is the sky?": "天空是什么颜色的？",
+                "What color is grass?": "草是什么颜色的？",
+                "What shape is a ball?": "球是什么形状的？",
+                "What shape is a box?": "盒子是什么形状的？",
+                
+                // 数字与计数
+                "How many fingers do you have on one hand?": "一只手上有几个手指？",
+                "What comes after number 5?": "数字5之后是什么？",
+                "How many days are in a week?": "一周有几天？",
+                "What is 2 + 2?": "2 + 2等于多少？",
+                "What is 5 - 2?": "5 - 2等于多少？",
+                
+                // 季节与天气
+                "Which season is hot?": "哪个季节很热？",
+                "Which season is cold?": "哪个季节很冷？",
+                "What do you wear when it rains?": "下雨时你穿什么？",
+                "What do you wear when it's hot?": "天热时你穿什么？",
+                
+                // 职业认知
+                "Who teaches in a school?": "谁在学校教书？",
+                "Who helps sick people?": "谁帮助生病的人？",
+                "Who puts out fires?": "谁扑灭火灾？",
+                "Who keeps people safe?": "谁保障人们安全？",
+                
+                // 交通工具
+                "What flies in the sky?": "什么在天空中飞？",
+                "What moves on water?": "什么在水上移动？",
+                "What has two wheels?": "什么有两个轮子？",
+                "What runs on tracks?": "什么在轨道上运行？",
+                
+                // 家庭成员
+                "Who is your father's father?": "你父亲的父亲是谁？",
+                "Who is your mother's sister?": "你母亲的姐妹是谁？",
+                "Who is your father's brother?": "你父亲的兄弟是谁？",
+                "Who is your mother's mother?": "你母亲的母亲是谁？",
+                
+                // 身体部位
+                "What do you use to see?": "你用什么来看？",
+                "What do you use to hear?": "你用什么来听？",
+                "What do you use to smell?": "你用什么来闻？",
+                "What do you use to taste?": "你用什么来尝味道？",
+                
+                // 情感表达
+                "How do you feel when you get a present?": "当你收到礼物时感觉如何？",
+                "How do you feel when you lose your toy?": "当你丢失玩具时感觉如何？",
+                "How do you feel when someone scares you?": "当有人吓你时感觉如何？",
+                "How do you feel when someone takes your toy?": "当有人拿走你的玩具时感觉如何？",
+                
+                // 日常活动
+                "What do you do before going to bed?": "睡觉前你做什么？",
+                "What do you do in the morning?": "早上你做什么？",
+                "What do you do at school?": "在学校你做什么？",
+                "What do you do when you're hungry?": "当你饿了时你做什么？",
+                
+                // 位置与方向
+                "Where is the bird?": "鸟在哪里？",
+                "Where is the cat?": "猫在哪里？"
+            };
+            
+            // 获取翻译结果
+            const translation = translations[text] || "暂无翻译";
+            
+            // 在页面上显示翻译结果
+            const translationElement = document.getElementById('translation-text');
+            translationElement.innerHTML = `<div><strong>英文：</strong>${text}</div><div><strong>中文：</strong>${translation}</div>`;
+            translationElement.style.display = 'block';
+            
+            // 添加一个简单的动画效果
+            translationElement.style.opacity = '0';
+            setTimeout(() => {
+                translationElement.style.transition = 'opacity 0.3s ease';
+                translationElement.style.opacity = '1';
+            }, 10);
+        }
+
+        loadQuestions();
+        displayQuestion();
+    </script>
+</body>
+</html>
